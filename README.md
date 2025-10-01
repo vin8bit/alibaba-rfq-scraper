@@ -31,3 +31,11 @@ beautifulsoup4
 pandas
 
 selenium (if used for dynamic scraping)
+
+
+Usage:
+Clone the repository and install dependencies using pip install -r requirements.txt.
+Run alibaba_rfq_scraper.py to start scraping RFQ listings.
+Scraped data will be saved in alibaba_rfq_listings.csv.
+Make sure to configure any required browser drivers if using Selenium.
+Use the web_screenshot.PNG to verify page layout consistency.
