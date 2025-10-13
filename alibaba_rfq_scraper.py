@@ -103,7 +103,7 @@ def scrape_rfq_listings(
             continue
 
     headers = [
-        'RFQ ID', 'Title', 'Buyer Name', 'Buyer Image', 'Inquiry Time',
+        'RFQ ID.', 'Title', 'Buyer Name', 'Buyer Image', 'Inquiry Time',
         'Quotes Left', 'Country', 'Quantity Required', 'Email Confirmed',
         'Experienced Buyer', 'Complete Order via RFQ', 'Typical Replies',
         'Interactive User', 'Inquiry URL', 'Inquiry Date', 'Scraping Date'
@@ -120,3 +120,4 @@ def scrape_rfq_listings(
 
 if __name__ == "__main__":
     scrape_rfq_listings()
+
