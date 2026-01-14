@@ -1,41 +1,49 @@
-📂 Project Structure
+# 🛒 Alibaba RFQ Web Scraper
 
-alibaba_rfq_scraper.py → Main Python script for scraping RFQ listings.
+A Python-based web scraping project that automatically extracts **RFQ (Request for Quotation)** listings from Alibaba and stores them in a structured CSV format. The project is designed to be simple, extensible, and useful for data analysis or lead generation.
 
-alibaba_rfq_listings.csv → Output file containing scraped RFQ data.
+---
 
-web_screenshot.PNG → Example screenshot of the scraped webpage.
+## 📂 Project Structure
 
-vineet_web_scraping/ → Project folder with additional scripts/resources.
+├── alibaba_rfq_scraper.py # Main Python script for scraping RFQ listings
+├── alibaba_rfq_listings.csv # Output file containing scraped RFQ data
+├── web_screenshot.PNG # Example screenshot of the scraped webpage
+├── vineet_web_scraping/ # Additional scripts and resources
+└── requirements.txt # Python dependencies
 
-🚀 Features
+---
 
-Scrapes Alibaba RFQ listings automatically.
+## 🚀 Features
 
-Extracts product details, categories, and supplier information.
+- Automatically scrapes Alibaba RFQ listings
+- Extracts:
+  - Product details
+  - Categories
+  - Supplier information
+- Saves scraped data in **CSV format** for further processing
 
-Saves data into CSV format for further use.
+---
 
-Captures webpage screenshots for documentation and debugging.
+## 🔧 Requirements
 
-Easy to extend for other e-commerce platforms.
+- Python **3.x**
+- `beautifulsoup4`
+- `pandas`
+- `selenium`
 
-🔧 Requirements
+---
 
-Python 3.x
+## ⚙️ Installation
+```
+pip install -r requirements.txt
+```
 
-requests
-
-beautifulsoup4
-
-pandas
-
-selenium (if used for dynamic scraping)
-
-
-Usage:
-Clone the repository and install dependencies using pip install -r requirements.txt.
-Run alibaba_rfq_scraper.py to start scraping RFQ listings.
-Scraped data will be saved in alibaba_rfq_listings.csv.
-Make sure to configure any required browser drivers if using Selenium.
-Use the web_screenshot.PNG to verify page layout consistency.
+## ▶️ Run the scraper:
+```
+python alibaba_rfq_scraper.py
+```
+### The scraped RFQ data will be saved to:
+```
+alibaba_rfq_listings.csv
+```
