@@ -7,9 +7,13 @@ A Python-based web scraping project that automatically extracts **RFQ (Request f
 ## 📂 Project Structure
 
 ├── alibaba_rfq_scraper.py # Main Python script for scraping RFQ listings
+
 ├── alibaba_rfq_listings.csv # Output file containing scraped RFQ data
+
 ├── web_screenshot.PNG # Example screenshot of the scraped webpage
+
 ├── vineet_web_scraping/ # Additional scripts and resources
+
 └── requirements.txt # Python dependencies
 
 ---
@@ -27,8 +31,8 @@ A Python-based web scraping project that automatically extracts **RFQ (Request f
 
 ## 🔧 Requirements
 
-- Python **3.x**
-- `beautifulsoup4`
+- `Python 3 or above`
+ - `beautifulsoup4`
 - `pandas`
 - `selenium`
 
