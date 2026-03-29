@@ -11,6 +11,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
+import requests
+from requests.exceptions import RequestException
+from typing import Optional, List, Dict
+import time
 
 logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
 
@@ -20,21 +24,63 @@ USER_AGENTS = [
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36"
 ]
 
+class RateLimiter:
+    def __init__(self, max_per_second: float):
+        self.max_per_second = max_per_second
+        self.last_request_time = 0
+
+    def wait(self):
+        current_time = time.time()
+        time_passed = current_time - self.last_request_time
+        time_to_wait = 1.0 / self.max_per_second - time_passed
+
+        if time_to_wait > 0:
+            time.sleep(time_to_wait)
+
+        self.last_request_time = time.time()
+
+def check_proxy(proxy: str) -> bool:
+    """Check if proxy is working."""
+    try:
+        response = requests.get('https://www.alibaba.com', 
+                              proxies={'http': proxy, 'https': proxy},
+                              timeout=10)
+        return response.status_code == 200
+    except RequestException:
+        return False
+
 def scrape_rfq_listings(
     url="https://sourcing.alibaba.com/rfq/rfq_search_list.htm?spm=a2700.8073608.1998677541.1.82be65aaoUUItC&&country=AE&&recently=Y&&tracelog=newest",
     output_csv='alibaba_rfq_listings.csv',
     wait_time=10,
-    max_retries=3
+    max_retries=3,
+    proxy: Optional[str] = None,
+    requests_per_second: float = 1.0
 ):
     """
     Scrape Alibaba RFQ listings and save to CSV.
     """
+    # Initialize rate limiter
+    rate_limiter = RateLimiter(requests_per_second)
+    
+    # Validate proxy if provided
+    if proxy:
+        if not check_proxy(proxy):
+            logging.error("Provided proxy is not working. Proceeding without proxy.")
+            proxy = None
+        else:
+            logging.info("Using proxy: %s", proxy)
+
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")
     options.add_argument("--disable-blink-features=AutomationControlled")
     options.add_argument("--ignore-certificate-errors")
     options.add_argument("--ignore-ssl-errors")
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    
+    if proxy:
+        options.add_argument(f'--proxy-server={proxy}')
+    
     user_agent = random.choice(USER_AGENTS)
     options.add_argument(f"user-agent={user_agent}")
     logging.info(f"Using User-Agent: {user_agent}")
@@ -74,6 +120,9 @@ def scrape_rfq_listings(
 
     for idx, row in enumerate(rfq_rows, 1):
         try:
+            # Apply rate limiting
+            rate_limiter.wait()
+            
             rfq_link = row.find('a', class_='brh-rfq-item__subject-link')['href']
             rfq_id = rfq_link.split('uuid=')[1].split('&')[0] if 'uuid=' in rfq_link else 'N/A'
             title_elem = row.find('a', class_='brh-rfq-item__subject-link')
@@ -119,5 +168,11 @@ def scrape_rfq_listings(
         logging.error(f"CSV saving error: {e}")
 
 if __name__ == "__main__":
-    scrape_rfq_listings()
+    # Example usage with all new features
+    scrape_rfq_listings(
+        wait_time=15,  # Increased wait time for better reliability
+        max_retries=5,  # Increased retries
+        proxy=None,  # Add your proxy here if needed e.g., "http://your-proxy:8080"
+        requests_per_second=0.5  # Conservative rate limiting
+    )
 
